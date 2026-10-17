@@ -223,9 +223,10 @@ class Orchestrator:
 
     # -- one challenge end-to-end --------------------------------------------
 
-    async def handle(self, ch_name: str, ch_dir: Path, remote: dict | None) -> None:
+    async def handle(
+        self, ch_name: str, ch_dir: Path, remote: dict | None, insight: str | None = None
+    ) -> None:
         entry = self._entry(ch_name)
-        insight: str | None = None
 
         while entry["attempts"] < self.cfg.max_attempts and not entry["solved"]:
             entry["attempts"] += 1
@@ -356,8 +357,8 @@ class Orchestrator:
                 break
             await asyncio.sleep(self.cfg.poll)
 
-    async def solve_dir(self, ch_dir: Path) -> None:
-        await self.handle(ch_dir.name, ch_dir, None)
+    async def solve_dir(self, ch_dir: Path, insight: str | None = None) -> None:
+        await self.handle(ch_dir.name, ch_dir, None, insight)
 
 
 # --------------------------------------------------------------------------- #
@@ -431,6 +432,7 @@ def main() -> None:
     sub.add_parser("local", parents=[common])
     sp = sub.add_parser("solve", parents=[common])
     sp.add_argument("dir")
+    sp.add_argument("--insight", help="targeted guidance injected into the solver prompt")
     ss = sub.add_parser("submit", parents=[common])
     ss.add_argument("--challenge", required=True)
     ss.add_argument("--flag", required=True)
@@ -459,7 +461,7 @@ def main() -> None:
             f.write(f"{time.strftime('%H:%M:%S')} {args.text}\n")
         print("queued")
     elif args.cmd == "solve":
-        asyncio.run(orch.solve_dir(Path(args.dir).resolve()))
+        asyncio.run(orch.solve_dir(Path(args.dir).resolve(), args.insight))
     elif args.cmd == "local":
         asyncio.run(orch.run_local(theme=None, once=args.once))
     elif args.cmd == "run":
