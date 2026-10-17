@@ -122,8 +122,13 @@ if [ ! -x "$TOOLS/jadx/bin/jadx" ]; then
 fi
 if [ ! -f "$TOOLS/stegsolve/Stegsolve.jar" ]; then
   mkdir -p "$TOOLS/stegsolve"
-  curl -fsSL "https://github.com/eugenekolo/sec-tools/raw/master/stego/stegsolve/stegsolve.jar" \
-    -o "$TOOLS/stegsolve/Stegsolve.jar" || echo "WARN: stegsolve jar download failed"
+  for url in \
+    "https://github.com/zer00d4y/stegsolve/raw/main/Stegsolve.jar" \
+    "https://github.com/eugenekolo/sec-tools/raw/master/stego/stegsolve/stegsolve.jar" \
+    "http://www.caesum.com/handbook/Stegsolve.jar"; do
+    curl -fsSL "$url" -o "$TOOLS/stegsolve/Stegsolve.jar" && [ -s "$TOOLS/stegsolve/Stegsolve.jar" ] && break
+  done
+  [ -s "$TOOLS/stegsolve/Stegsolve.jar" ] || echo "WARN: stegsolve jar download failed"
 fi
 if [ ! -d "$HOME/.ctf-tools/crypto-attacks/.git" ]; then
   git clone --depth 1 https://github.com/jvdsn/crypto-attacks "$HOME/.ctf-tools/crypto-attacks" || true
