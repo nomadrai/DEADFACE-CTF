@@ -1,0 +1,14 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": ["CTF-Playbook.md"],
+  "mcp": {
+    "servers": {
+      "pwndbg": {
+        "type": "remote",
+        "url": "http://localhost:8780/mcp",
+        "oauth": false,
+        "disabled": false
+      }
+    }
+  }
+}
