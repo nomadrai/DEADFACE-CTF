@@ -3,3 +3,7 @@
 .ctf-gems/
 .ctf-bin/
 .ctf-home/
+logs/
+.orchestrator_state.json
+__pycache__/
+/flag.txt
