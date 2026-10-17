@@ -1,0 +1,5 @@
+.env
+.ctf-venv/
+.ctf-gems/
+.ctf-bin/
+.ctf-home/
